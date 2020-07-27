@@ -1,11 +1,7 @@
 #!/usr/bin/env nextflow
 
-// Specify DSL2
 nextflow.enable.dsl=2
 
-params.outdir = "results"
-
-// Clumpify
 process bbmap_clumpify {
 
     container = 'bbmap:2020072002'
@@ -17,7 +13,10 @@ process bbmap_clumpify {
         tuple val(sampleName), path(reads1), path(reads2)
 
     output:
-        tuple val(sampleName), path("*dedup*.fastq.gz"), emit: dedupFastqFiles
+        tuple val(sampleName),
+        path("*dedupR1.fastq.gz"),
+        path("*dedupR2.fastq.gz"),
+        emit: dedupFastqFiles
 
     script:
 
