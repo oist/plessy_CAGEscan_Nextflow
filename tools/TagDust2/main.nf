@@ -16,9 +16,9 @@ process TagDust2 {
 
     output:
         tuple val(sampleName),
-        path("*dedupR1.fastq.gz"),
-        path("*dedupR2.fastq.gz"),
-        emit: dedupFastqFiles
+        path("*_BC_*_READ1.fq"),
+        path("*_BC_*_READ2.fq"),
+            emit: dedupFastqFiles
 
     script:
 
