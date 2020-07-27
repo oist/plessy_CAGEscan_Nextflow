@@ -15,10 +15,8 @@ process TagDust2 {
         path(tagdust_ref)
 
     output:
-        tuple val(sampleName),
-        path("*_BC_*_READ1.fq"),
-        path("*_BC_*_READ2.fq"),
-            emit: dedupFastqFiles
+        tuple val(sampleName), path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
+        path "*_logfile.txt", emit: TagDust2LogFile
 
     script:
 
