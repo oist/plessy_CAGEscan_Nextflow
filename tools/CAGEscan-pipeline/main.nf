@@ -129,7 +129,34 @@ process CAGEscanBuildTranscripts {
         """
 
     if (params.verbose){
-        println ("[MODULE] CAGEscan build transcripts command: " + command)
+        println ("[MODULE] CAGEscan count hits command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
+process CAGEscanConvertToBED12 {
+    container = 'cagescan-pipeline:2020072701'
+    publishDir "${params.outdir}/CAGEscan/BED12",
+        mode: "copy", overwrite: true
+    input:
+        tuple val(sampleName),
+              path(transcripts)
+
+    output:
+        tuple val(sampleName),
+              path("*.bed"),
+              emit: CAGEscanBED12
+    script:
+    command = """
+        cagescan-to-bed.py -s1e6 ${transcripts} |
+           sort -k1,1 -k2,2n -k3,3n -k4,4 -k6,6 > ${sampleName}.bed
+        """
+
+    if (params.verbose){
+        println ("[MODULE] CAGEscan convert to BED12 command: " + command)
     }
 
     """

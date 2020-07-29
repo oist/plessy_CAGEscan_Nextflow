@@ -10,6 +10,7 @@ include {CAGEscanAssemble         } from './main.nf'
 include {CAGEscanMap              } from './main.nf'
 include {CAGEscanCountHits        } from './main.nf'
 include {CAGEscanBuildTranscripts } from './main.nf'
+include {CAGEscanConvertToBED12   } from './main.nf'
 
 log.info ("Starting tests for CAGEscan pipeline...")
 
@@ -30,4 +31,5 @@ workflow {
     CAGEscanMap(CAGEscanAssemble.out, ch_index)
     CAGEscanCountHits(CAGEscanMap.out)
     CAGEscanBuildTranscripts(CAGEscanMap.out)
+    CAGEscanConvertToBED12(CAGEscanBuildTranscripts.out)
 }
