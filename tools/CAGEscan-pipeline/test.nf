@@ -3,16 +3,17 @@
 nextflow.enable.dsl=2
 
 params.outdir = "test_results"
+params.verbose = true
 
-include {CAGEscanFindMolecules} from './main.nf'
-include {CAGEscanAssemble     } from './main.nf'
-include {CAGEscanMap          } from './main.nf'
+include {CAGEscanFindMolecules    } from './main.nf'
+include {CAGEscanAssemble         } from './main.nf'
+include {CAGEscanMap              } from './main.nf'
+include {CAGEscanCountHits        } from './main.nf'
+include {CAGEscanBuildTranscripts } from './main.nf'
 
 log.info ("Starting tests for CAGEscan pipeline...")
 
 testData = [ [ 'Sample1', "../test/Sample1_BC_ACATGA_READ1.fq", "../test/Sample1_BC_ACATGA_READ2.fq" ] ]
-
-params.verbose = true
 
 channel
   .from(testData)
@@ -27,4 +28,6 @@ workflow {
     CAGEscanFindMolecules(ch_fastq)
     CAGEscanAssemble(CAGEscanFindMolecules.out)
     CAGEscanMap(CAGEscanAssemble.out, ch_index)
+    CAGEscanCountHits(CAGEscanMap.out)
+    CAGEscanBuildTranscripts(CAGEscanMap.out)
 }

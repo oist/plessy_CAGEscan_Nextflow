@@ -41,8 +41,6 @@ process CAGEscanAssemble {
               path(molecules)
     output:
         tuple val(sampleName),
-              path(reads1),
-              path(reads2),
               path("*.assembled.fq"),
               emit: CAGEscanAssembled
     script:
@@ -65,15 +63,11 @@ process CAGEscanMap {
         mode: "copy", overwrite: true
     input:
         tuple val(sampleName),
-              path(reads1),
-              path(reads2),
               path(assembled)
         path(index)
 
     output:
         tuple val(sampleName),
-              path(reads1),
-              path(reads2),
               path("*.maf"),
               emit: CAGEscanMapped
     script:
@@ -83,6 +77,59 @@ process CAGEscanMap {
 
     if (params.verbose){
         println ("[MODULE] CAGEscan map command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
+process CAGEscanCountHits {
+    container = 'cagescan-pipeline:2020072701'
+    publishDir "${params.outdir}/CAGEscan/hits",
+        mode: "copy", overwrite: true
+    input:
+        tuple val(sampleName),
+              path(mapped)
+
+    output:
+        tuple val(sampleName),
+              path("*.hits.txt"),
+              emit: CAGEscanCountedHits
+    script:
+    command = """
+        cagescan-count-hits.sh ${mapped} |
+           awk '{print \$0 "\t${sampleName}"}' > "${sampleName}".hits.txt
+        """
+
+    if (params.verbose){
+        println ("[MODULE] CAGEscan count hits command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
+process CAGEscanBuildTranscripts {
+    container = 'cagescan-pipeline:2020072701'
+    publishDir "${params.outdir}/CAGEscan/transcripts",
+        mode: "copy", overwrite: true
+    input:
+        tuple val(sampleName),
+              path(mapped)
+
+    output:
+        tuple val(sampleName),
+              path("*.transcripts.txt"),
+              emit: CAGEscanCountedHits
+    script:
+    command = """
+        cagescan-build-transcripts.py -b20 -m0.001 ${mapped} > ${sampleName}.transcripts.txt
+        """
+
+    if (params.verbose){
+        println ("[MODULE] CAGEscan build transcripts command: " + command)
     }
 
     """
