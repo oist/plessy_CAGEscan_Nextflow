@@ -2,9 +2,25 @@
 
 nextflow.enable.dsl=2
 
+process bbmap_version {
+    container = 'cagescan-pipeline-module-bbmap:38.86'
+    input:
+    output:
+    script:
+    command = "bbmap.sh -version"
+
+    if (params.verbose){
+        println ("[MODULE] BBMap/version command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
 process bbmap_clumpify {
 
-    container = 'bbmap:2020072002'
+    container = 'cagescan-pipeline-module-bbmap:38.86'
 
     publishDir "${params.outdir}/bbmap/clumpify",
         mode: "copy", overwrite: true
@@ -20,16 +36,17 @@ process bbmap_clumpify {
 
     script:
 
-    // removed 'shortname' argument as it produces empty file on my system.
-    command = """
-        java -cp /usr/share/java/bbmap.jar clump.Clumpify \
-            in=$reads1 \
-            in2=$reads2 \
-            out=${sampleName}_dedupR1.fastq.gz \
-            out2=${sampleName}_dedupR2.fastq.gz \
-            dedupe \
-            addcount
-         """
+    command =
+    """
+    clumpify.sh \
+        in=$reads1 \
+        in2=$reads2 \
+        out=${sampleName}_dedupR1.fastq.gz \
+        out2=${sampleName}_dedupR2.fastq.gz \
+        dedupe=t \
+        shortname=t \
+        addcount=t
+    """
 
     if (params.verbose){
         println ("[MODULE] BBMap/clumpify command: " + command)
@@ -39,3 +56,40 @@ process bbmap_clumpify {
     ${command}
     """
 }
+
+process bbmap_minlen {
+
+    container = 'cagescan-pipeline-module-bbmap:38.86'
+
+    publishDir "${params.outdir}/bbmap/minlen",
+        mode: "copy", overwrite: true
+
+    input:
+        tuple val(sampleName), path(reads1), path(reads2)
+
+    output:
+        tuple val(sampleName),
+        path("*minlenR1.fastq.gz"),
+        path("*minlenR2.fastq.gz"),
+        emit: minlenFastqFiles
+
+    script:
+
+    command = """
+        bbduk.sh \
+            in=$reads1 \
+            in2=$reads2 \
+            out=${sampleName}_minlenR1.fastq.gz \
+            out2=${sampleName}_minlenR2.fastq.gz \
+            minlen=28
+         """
+
+    if (params.verbose){
+        println ("[MODULE] BBDuk minlen command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+

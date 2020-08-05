@@ -1,14 +1,18 @@
 #!/usr/bin/env nextflow
 
-// Specify DSL2
-nextflow.preview.dsl = 2
+nextflow.enable.dsl=2
 
-include {bbmap_clumpify} from './main.nf'
+params.outdir = "test_results"
+params.verbose = true
 
-log.info ("Starting tests for BBMap clumpify...")
+include { bbmap_clumpify
+        ; bbmap_minlen
+        ; bbmap_version  } from './main.nf'
 
-testData = [ [ 'Sample1', "../test/test_R1.fastq.gz", "../test/test_R2.fastq.gz" ] ]
-
+testData = [
+    [ 'Sample1', "../test/test_R1.fastq.gz",               "../test/test_R2.fastq.gz" ] ,
+    [ 'Sample2', "../test/Embryo_S2_L001_R1_001.fastq.gz", "../test/Embryo_S2_L001_R2_001.fastq.gz" ]
+]
 
 Channel
   .from(testData)
@@ -16,6 +20,7 @@ Channel
   .set {ch_fastq}
 
 workflow {
-params.verbose = true
-    bbmap_clumpify(ch_fastq)
+    bbmap_version
+    bbmap_clumpify(ch_fastq) |
+    bbmap_minlen
 }
