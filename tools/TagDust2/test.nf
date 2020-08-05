@@ -8,7 +8,8 @@ include {TagDust2} from './main.nf'
 
 log.info ("Starting tests for TagDust2...")
 
-testData = [ [ 'Sample1', "../test/test_R1.fastq.gz", "../test/test_R2.fastq.gz" ] ]
+testData = [ [ 'Sample1', "../test/test_R1.fastq.gz", "../test/test_R2.fastq.gz" ]
+           , [ 'Sample2', "../test/test_R1.fastq.gz", "../test/test_R2.fastq.gz" ] ]
 
 params.verbose = true
 
@@ -27,4 +28,5 @@ channel
 
 workflow {
     TagDust2(ch_fastq, ch_arch, ch_ref)
+    TagDust2.out.demultiplexedFastqFiles | view
 }
