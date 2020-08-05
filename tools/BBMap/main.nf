@@ -6,15 +6,10 @@ process bbmap_version {
     container = 'cagescan-pipeline-module-bbmap:38.86'
     input:
     output:
+        stdout()
     script:
-    command = "bbmap.sh -version"
-
-    if (params.verbose){
-        println ("[MODULE] BBMap/version command: " + command)
-    }
-
     """
-    ${command}
+    bbmap.sh -version 2>&1 | grep 'BBMap version'
     """
 }
 
