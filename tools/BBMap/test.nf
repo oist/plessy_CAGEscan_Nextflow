@@ -20,7 +20,7 @@ Channel
   .set {ch_fastq}
 
 workflow {
-    bbmap_version
+    bbmap_version | view
     bbmap_clumpify(ch_fastq) |
     bbmap_minlen
 }
