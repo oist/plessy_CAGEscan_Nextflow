@@ -1,0 +1,7 @@
+name: CAGEscan-pipeline-module-BBMap
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - BBmap=38.86
