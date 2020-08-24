@@ -129,7 +129,7 @@ process CAGEscanBuildTranscripts {
         """
 
     if (params.verbose){
-        println ("[MODULE] CAGEscan count hits command: " + command)
+        println ("[MODULE] CAGEscan build transcripts command: " + command)
     }
 
     """
