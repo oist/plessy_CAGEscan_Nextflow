@@ -33,7 +33,7 @@ testData = [ [ 'Sample1', "../test/Sample1_BC_ACATGA_READ1.fq", "../test/Sample1
              [ 'Sample2', "../test/Sample2_BC_ATCATA_READ1.fq", "../test/Sample2_BC_ATCATA_READ2.fq" ] ]
 
 channel
-  .from(testData)
+  .fromList(testData)
   .map { row -> [ row[0], file(row[1], checkIfExists: true), file(row[2], checkIfExists: true) ] }
   .set {ch_fastq}
 
