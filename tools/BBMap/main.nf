@@ -8,8 +8,12 @@ process bbmap_version {
     output:
         stdout()
     script:
+    command = ''
+    if (params.verbose){
+        command = "bbmap.sh -version 2>&1 | grep 'BBMap version'"
+    }
     """
-    bbmap.sh -version 2>&1 | grep 'BBMap version'
+    ${command}
     """
 }
 
