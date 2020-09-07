@@ -4,7 +4,7 @@ nextflow.enable.dsl=2
 
 params.outdir = "test_results"
 
-include {TagDust2} from './main.nf'
+include { main_wf } from './workflow.nf'
 
 log.info ("Starting tests for TagDust2...")
 
@@ -27,6 +27,5 @@ channel
   .set {ch_ref}
 
 workflow {
-    TagDust2(ch_fastq, ch_arch, ch_ref)
-    TagDust2.out.demultiplexedFastqFiles | view
+    main_wf(ch_fastq, ch_arch, ch_ref)
 }
