@@ -20,10 +20,6 @@ channel
   .value(file(params.arch))
   .set {ch_arch}
 
-channel
-  .value(file(params.ref))
-  .set {ch_ref}
-
 workflow {
-    main_wf(ch_fastq, ch_arch, ch_ref)
+    main_wf(ch_fastq, ch_arch)
 }

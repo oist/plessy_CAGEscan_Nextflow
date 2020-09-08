@@ -44,6 +44,45 @@ process TagDust2 {
     """
 }
 
+process TagDust2_demultiplex {
+// Same as TagDust2 but with no --ref
+// Because we want to count rRNAs after demultiplexing
+    container = 'tagdust2:2020071401'
+
+    publishDir "${params.outdir}/tagdust2",
+        mode: "copy", overwrite: true
+
+    input:
+        tuple val(sampleName), path(reads1), path(reads2)
+        path(tagdust_arch)
+
+    output:
+//        tuple path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
+        path "*_BC_*_READ1.fq", emit: demultiplexedFastqFilesR1
+        path "*_BC_*_READ2.fq", emit: demultiplexedFastqFilesR2
+        path "*_logfile.txt",   emit: TagDust2LogFile
+
+    script:
+
+    // removed 'shortname' argument as it produces empty file on my system.
+    command = """
+        tagdust                            \
+            -show_finger_seq               \
+            -arch $tagdust_arch            \
+            -o ${sampleName}               \
+            ${reads1}                      \
+            ${reads2}                      \
+         """
+
+    if (params.verbose){
+        println ("[MODULE] TagDust2_demultiplex command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
 process TagDust2_getSampleNames {
 
   input:
