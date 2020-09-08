@@ -2,6 +2,8 @@
 
 nextflow.enable.dsl=2
 
+// To Do: a multiplex file validator process.
+
 process TagDust2 {
 
     container = 'tagdust2:2020071401'
