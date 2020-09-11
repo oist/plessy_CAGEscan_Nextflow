@@ -13,7 +13,8 @@ params.verbose = false
 include { TagDust2_multiplex2arch
         ; TagDust2_demultiplex
         ; TagDust2_filter_ref as TagDust2_dust
-        ; TagDust2_filter_ref as TagDust2_rRNA } from  './tools/TagDust2/main.nf'
+        ; TagDust2_filter_ref as TagDust2_rRNA
+        ; TagDust2_associateWithSampleName      } from  './tools/TagDust2/main.nf'
 include { bbmap_clumpify  }                from  './tools/BBMap/main.nf'
 include { main_nf as CAGEscan_pipeline }   from  './tools/CAGEscan-pipeline/workflow.nf'
 
@@ -42,8 +43,14 @@ channel
 
 
 workflow {
-    TagDust2_multiplex2arch(ch_fastqPairs, ch_multiplexfile)
-    TagDust2_demultiplex(TagDust2_multiplex2arch.out.fastqPairs, TagDust2_multiplex2arch.out.arch)
+    TagDust2_multiplex2arch( ch_fastqPairs
+                           , ch_multiplexfile)
+    TagDust2_demultiplex( TagDust2_multiplex2arch.out.fastqPairs
+                        , TagDust2_multiplex2arch.out.arch)
+    TagDust2_associateWithSampleName( TagDust2_demultiplex.out.fastqR1.flatten()
+                                    , TagDust2_demultiplex.out.fastqR2.flatten()
+                                    , ch_multiplexfile)
+    TagDust2_associateWithSampleName.out.view()
 //  TagDust2_dust(TagDust2_demultiplex.out.fastqPairs, ch_dust_fasta)
 //  TagDust2_rRNA(TagDust2_dust.out.fastqPairs, ch_rRNA_fasta)
 //  CAGEscan_pipeline(TagDust2_rRNA.out.fastqPairs, ch_index)
