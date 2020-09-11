@@ -11,6 +11,8 @@ Input:
  - A text table that we call "multiplex file", indicating which barcode
    and index were used for each libraries.
  - A genome indexed for the LAST aligner.
+ - A reference rRNA file in FASTA format.
+   (It may also contain reference primer artefacts).
 
 Example "multiplex file":
 
