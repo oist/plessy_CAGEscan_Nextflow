@@ -12,7 +12,7 @@ Input:
    and index were used for each libraries.
  - A genome indexed for the LAST aligner.
  - A reference rRNA file in FASTA format.
-   (It may also contain reference primer artefacts).
+ - A file with primer sequences in FASTA formats to remove primer artefacts.
 
 Example "multiplex file":
 
