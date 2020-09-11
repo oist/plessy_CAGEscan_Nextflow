@@ -31,6 +31,7 @@ channel
   .set { ch_input }
 
 workflow {
-  hello2(ch_input) | listFilesFromInput | view
+  hello2(ch_input)
+  listFilesFromInput(hello2.out.flatten()) | view
 }
 
