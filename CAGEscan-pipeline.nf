@@ -42,10 +42,8 @@ channel
 
 
 workflow {
-//  ch_fastqPairs.view()
     TagDust2_multiplex2arch(ch_fastqPairs, ch_multiplexfile)
-//  view(TagDust2_multiplex2arch.out.fastqPairs)
-//  TagDust2_demultiplex(TagDust2_multiplex2arch.out.fastqPairs, TagDust2_multiplex2arch.out.arch)
+    TagDust2_demultiplex(TagDust2_multiplex2arch.out.fastqPairs, TagDust2_multiplex2arch.out.arch)
 //  TagDust2_dust(TagDust2_demultiplex.out.fastqPairs, ch_dust_fasta)
 //  TagDust2_rRNA(TagDust2_dust.out.fastqPairs, ch_rRNA_fasta)
 //  CAGEscan_pipeline(TagDust2_rRNA.out.fastqPairs, ch_index)
