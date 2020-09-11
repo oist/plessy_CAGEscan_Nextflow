@@ -54,10 +54,9 @@ process TagDust2_demultiplex {
         val(tagdust_arch)
 
     output:
-//        tuple path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
-        path "*_BC_*_READ1.fq", emit: demultiplexedFastqFilesR1
-        path "*_BC_*_READ2.fq", emit: demultiplexedFastqFilesR2
-        path "*_logfile.txt",   emit: TagDust2LogFile
+        path "*_BC_*_READ1.fq", emit: fastqR1
+        path "*_BC_*_READ2.fq", emit: fastqR2
+        path "*_logfile.txt",   emit: logFile
 
     script:
 
@@ -189,5 +188,24 @@ process TagDust2_multiplex2arch {
     tagdust -1 B:$BARCODES -2 F:NNNNNNNN -3 S:TATAGGG -4 R:N
     tagdust -1 R:N
     __END__
+  '''
+}
+
+process TagDust2_associateWithSampleName {
+  input:
+    path(reads1)
+    path(reads2)
+    val(multiplexFile)
+  output:
+    tuple env(SAMPLENAME), path(reads1), path(reads2), emit: fastqPairs
+  shell:
+  '''
+  IDX1=$(echo !{reads1} | sed -e 's/_BC.*//')
+  IDX2=$(echo !{reads2} | sed -e 's/_BC.*//')
+  [ $IDX1 = $IDX2 ] || exit 1
+  BARCODE1=$(echo !{reads1} | sed -e 's/.*BC_//' -e 's/_.*//')
+  BARCODE2=$(echo !{reads2} | sed -e 's/.*BC_//' -e 's/_.*//')
+  [ $BARCODE1 = $BARCODE2 ] || exit 1
+  SAMPLENAME=$(awk -v idx=$IDX1 -v barcode=$BARCODE1 '$4 ~ idx && $3 == barcode {print $1}' !{multiplexFile})
   '''
 }
