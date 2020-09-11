@@ -90,9 +90,7 @@ process TagDust2_filter_ref {
         path(tagdust_ref)
 
     output:
-//        tuple path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
-        path "*_BC_*_READ1.fq", emit: demultiplexedFastqFilesR1
-        path "*_BC_*_READ2.fq", emit: demultiplexedFastqFilesR2
+        tuple val(sampleName), path("${sampleName}_READ1.fq"), path("${sampleName}_READ2.fq"), emit: fastqPairs
         path "*_logfile.txt",   emit: TagDust2LogFile
 
     script:
