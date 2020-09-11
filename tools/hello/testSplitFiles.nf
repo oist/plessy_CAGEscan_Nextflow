@@ -8,7 +8,7 @@ process hello2 {
 	input:
 		path(fileToSplit)
 	output:
-		path("*")
+		tuple path("*{a,c}"), path("*{b,d}")
 	script:
 	"""
 	split -l 10 ${fileToSplit}
@@ -31,7 +31,7 @@ channel
   .set { ch_input }
 
 workflow {
-  hello2(ch_input)
-  listFilesFromInput(hello2.out.flatten()) | view
+  hello2(ch_input) | view
+//  listFilesFromInput(hello2.out.flatten()) | view
 }
 
