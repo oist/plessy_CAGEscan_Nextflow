@@ -50,9 +50,10 @@ workflow {
     TagDust2_associateWithSampleName( TagDust2_demultiplex.out.fastqR1.flatten()
                                     , TagDust2_demultiplex.out.fastqR2.flatten()
                                     , ch_multiplexfile)
-    TagDust2_associateWithSampleName.out.view()
-//  TagDust2_dust(TagDust2_demultiplex.out.fastqPairs, ch_dust_fasta)
-//  TagDust2_rRNA(TagDust2_dust.out.fastqPairs, ch_rRNA_fasta)
+    TagDust2_dust( TagDust2_associateWithSampleName.out.fastqPairs
+                 , ch_dust_fasta)
+    TagDust2_rRNA( TagDust2_dust.out.fastqPairs
+                 , ch_rRNA_fasta)
 //  CAGEscan_pipeline(TagDust2_rRNA.out.fastqPairs, ch_index)
 //  view(CAGEscan_pipeline.out)
 }
