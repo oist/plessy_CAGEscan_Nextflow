@@ -58,6 +58,11 @@ process CAGEscanAssemble {
 }
 
 process CAGEscanMap {
+
+    //if (executor == 'local') {
+        cpus 6
+    //}
+
     container = 'cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/map",
         mode: "copy", overwrite: true

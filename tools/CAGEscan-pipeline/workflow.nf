@@ -32,6 +32,16 @@ workflow justAssembleUnzipped {
     CAGEscanAssemble
 }
 
+workflow alignAssembledMolecules {
+  take: ch_fastq
+  take: ch_index
+  main:
+    CAGEscanMap(ch_fastq, ch_index)
+    CAGEscanCountHits(CAGEscanMap.out)
+    CAGEscanBuildTranscripts(CAGEscanMap.out)
+    CAGEscanConvertToBED12(CAGEscanBuildTranscripts.out)
+}
+
 workflow main_nf {
   take: ch_fastq
   take: ch_index

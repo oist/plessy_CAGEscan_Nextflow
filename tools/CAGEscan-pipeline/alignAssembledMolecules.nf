@@ -9,11 +9,11 @@ include { alignAssembledMolecules } from './workflow.nf'
 
 channel
   .fromPath("${params.glob}*")
-  .map { row -> [ getBaseName(row[0]), row[0] ] }  
+  .map { row -> [ row.baseName, row ] }
   .set { ch_fastq }
 
 channel
-  .value(params.index)
+  .value(params.indexdir)
   .set {ch_index}
 
 workflow {
