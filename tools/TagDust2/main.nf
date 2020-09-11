@@ -1,12 +1,11 @@
 #!/usr/bin/env nextflow
-
 nextflow.enable.dsl=2
 
 // To Do: a multiplex file validator process.
 
 process TagDust2 {
 
-    container = 'tagdust2:2020071401'
+    container = 'cagescan/tagdust2:2020071401'
 
     publishDir "${params.outdir}/tagdust2",
         mode: "copy", overwrite: true
@@ -45,16 +44,14 @@ process TagDust2 {
 }
 
 process TagDust2_demultiplex {
-// Same as TagDust2 but with no --ref
-// Because we want to count rRNAs after demultiplexing
-    container = 'tagdust2:2020071401'
+    container = 'cagescan/tagdust2:2020071401'
 
     publishDir "${params.outdir}/tagdust2",
         mode: "copy", overwrite: true
 
     input:
         tuple val(sampleName), path(reads1), path(reads2)
-        path(tagdust_arch)
+        val(tagdust_arch)
 
     output:
 //        tuple path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
@@ -84,9 +81,7 @@ process TagDust2_demultiplex {
 }
 
 process TagDust2_filter_ref {
-// Same as TagDust2 but with no demultiplexing
-// This is to count and remove rRNAs after demultiplexing
-    container = 'tagdust2:2020071401'
+    container = 'cagescan/tagdust2:2020071401'
 
     publishDir "${params.outdir}/tagdust2",
         mode: "copy", overwrite: true
@@ -179,15 +174,16 @@ process TagDust2_multiplex2arch {
     mode: "copy", overwrite: true
 
   input:
+    tuple val(sampleName), path(reads1), path(reads2)
     val(multiplexFile)
-    val(index)
 
   output:
-    path "tagdust.arch", emit: TagDust2ArchFile
+    tuple val(sampleName), path(reads1, includeInputs:true), path(reads2, includeInputs:true), emit: fastqPairs
+    path "tagdust.arch", emit: arch
 
   shell:
   '''
-    BARCODES=$(awk -v idx=!{index} '$4 == idx {print $3}' !{multiplexFile})
+    BARCODES=$(awk -v idx=!{sampleName} '$4 ~ idx {print $3}' !{multiplexFile})
     BARCODES=$(echo $BARCODES | sed 's/ /,/g') # Bashism ?
     cat > tagdust.arch <<__END__
     tagdust -1 B:$BARCODES -2 F:NNNNNNNN -3 S:TATAGGG -4 R:N
