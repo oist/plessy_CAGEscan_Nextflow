@@ -10,6 +10,7 @@ Input:
  - The compressed FASTQ files produced by the sequencer, demultiplexed by index.
  - A text table that we call "multiplex file", indicating which barcode
    and index were used for each libraries.
+ - A genome indexed for the LAST aligner.
 
 Example "multiplex file":
 
