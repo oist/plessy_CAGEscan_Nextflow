@@ -4,7 +4,9 @@ nextflow.enable.dsl=2
 
 include { TagDust2_demultiplex
         ; TagDust2_getSampleNames
-        ; TagDust2_multiplex2arch  } from './main.nf'
+        ; TagDust2_multiplex2arch
+        ; TagDust2_filter_ref_SE
+        ; TagDust2_filter_ref  } from './main.nf'
 
 workflow main_wf {
   take: ch_fastq
@@ -20,4 +22,14 @@ workflow multiplex2arch {
   take: multiplexFile
   take: indexSequence
   main: TagDust2_multiplex2arch(multiplexFile, indexSequence)
+}
+workflow removeRiboRNA {
+  take: pairedFASTQfiles
+  take: referenceRRNAfile
+  main: TagDust2_filter_ref(pairedFASTQfiles, referenceRRNAfile)
+}
+workflow removeRiboRNA_SE {
+  take: FASTQfiles
+  take: referenceRRNAfile
+  main: TagDust2_filter_ref_SE(FASTQfiles, referenceRRNAfile)
 }

@@ -83,6 +83,81 @@ process TagDust2_demultiplex {
     """
 }
 
+process TagDust2_filter_ref {
+// Same as TagDust2 but with no demultiplexing
+// This is to count and remove rRNAs after demultiplexing
+    container = 'tagdust2:2020071401'
+
+    publishDir "${params.outdir}/tagdust2",
+        mode: "copy", overwrite: true
+
+    input:
+        tuple val(sampleName), path(reads1), path(reads2)
+        path(tagdust_ref)
+
+    output:
+//        tuple path("*_BC_*_READ1.fq"), path("*_BC_*_READ2.fq"), emit: demultiplexedFastqFiles
+        path "*_BC_*_READ1.fq", emit: demultiplexedFastqFilesR1
+        path "*_BC_*_READ2.fq", emit: demultiplexedFastqFilesR2
+        path "*_logfile.txt",   emit: TagDust2LogFile
+
+    script:
+
+    command = """
+        tagdust                            \
+            -ref $tagdust_ref              \
+            -arch trivial.arch             \
+            -o ${sampleName}               \
+            ${reads1}                      \
+            ${reads2}                      \
+         """
+
+    if (params.verbose){
+        println ("[MODULE] TagDust2_filter_ref command: " + command)
+    }
+
+    """
+    printf 'tagdust -1 R:N\n' > trivial.arch
+    ${command}
+    """
+}
+
+process TagDust2_filter_ref_SE {
+// Same as TagDust2 but with no demultiplexing
+// This is to count and remove rRNAs after demultiplexing
+    container = 'tagdust2:2020071401'
+
+    publishDir "${params.outdir}/tagdust2",
+        mode: "copy", overwrite: true
+
+    input:
+        path(reads)
+        path(tagdust_ref)
+
+    output:
+        path "*.fq", emit: demultiplexedFastqFile
+        path "*_logfile.txt",   emit: TagDust2LogFile
+
+    script:
+
+    command = """
+        tagdust                            \
+            -ref $tagdust_ref              \
+            -arch trivial.arch             \
+            -o ${reads}                    \
+            ${reads}                       \
+         """
+
+    if (params.verbose){
+        println ("[MODULE] TagDust2_filter_ref_SE command: " + command)
+    }
+
+    """
+    printf 'tagdust -1 R:N\n' > trivial.arch
+    ${command}
+    """
+}
+
 process TagDust2_getSampleNames {
 
   input:

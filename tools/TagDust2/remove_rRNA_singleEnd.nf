@@ -5,17 +5,16 @@ nextflow.enable.dsl=2
 params.outdir = "nf_results"
 params.verbose = false
 
-include { removeRiboRNA as main_wf } from './workflow.nf'
+include { removeRiboRNA_SE as main_wf } from './workflow.nf'
 
 channel
-  .fromFilePairs("${params.glob}*{1,2}*")
-  .map { row -> [ row[0], row[1][0], row[1][1] ] }
-  .set { ch_fastqPair }
+  .fromPath("${params.glob}*")
+  .set { ch_fastq }
 
 channel
   .value(file(params.rRNAref, checkIfExists: true))
   .set {ch_refFile}
 
 workflow {
-    main_wf(ch_fastqPair, ch_refFile)
+    main_wf(ch_fastq, ch_refFile)
 }
