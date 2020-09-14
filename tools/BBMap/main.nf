@@ -3,7 +3,7 @@
 nextflow.enable.dsl=2
 
 process bbmap_version {
-    container = 'cagescan-pipeline-module-bbmap:38.86'
+    container = 'cagescan/bbmap:38.86'
     input:
     output:
         stdout()
@@ -19,7 +19,7 @@ process bbmap_version {
 
 process bbmap_clumpify {
 
-    container = 'cagescan-pipeline-module-bbmap:38.86'
+    container = 'cagescan/bbmap:38.86'
 
     publishDir "${params.outdir}/bbmap/clumpify",
         mode: "copy", overwrite: true
@@ -58,7 +58,7 @@ process bbmap_clumpify {
 
 process bbmap_minlen {
 
-    container = 'cagescan-pipeline-module-bbmap:38.86'
+    container = 'cagescan/bbmap:38.86'
 
     publishDir "${params.outdir}/bbmap/minlen",
         mode: "copy", overwrite: true
@@ -91,4 +91,3 @@ process bbmap_minlen {
     ${command}
     """
 }
-

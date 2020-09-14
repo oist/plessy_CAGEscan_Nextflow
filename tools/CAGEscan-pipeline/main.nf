@@ -3,7 +3,7 @@
 nextflow.enable.dsl=2
 
 process CAGEscanFindMolecules {
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/find-molecules",
         mode: "copy", overwrite: true
     if (! params.count ) params.count = 2
@@ -32,7 +32,7 @@ process CAGEscanFindMolecules {
 }
 
 process CAGEscanAssemble {
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/assemble",
         mode: "copy", overwrite: true
     input:
@@ -64,7 +64,7 @@ process CAGEscanMap {
         cpus 6
     //}
 
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/map",
         mode: "copy", overwrite: true
     input:
@@ -91,7 +91,7 @@ process CAGEscanMap {
 }
 
 process CAGEscanCountHits {
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/hits",
         mode: "copy", overwrite: true
     input:
@@ -118,7 +118,7 @@ process CAGEscanCountHits {
 }
 
 process CAGEscanBuildTranscripts {
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/transcripts",
         mode: "copy", overwrite: true
     input:
@@ -144,7 +144,7 @@ process CAGEscanBuildTranscripts {
 }
 
 process CAGEscanConvertToBED12 {
-    container = 'cagescan-pipeline:2020072701'
+    container = 'cagescan/cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/BED12",
         mode: "copy", overwrite: true
     input:
