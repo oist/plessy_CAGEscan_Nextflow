@@ -3,6 +3,10 @@ nextflow.enable.dsl=2
 
 // Example: ./testFromPairs.nf --glob '../../../plessy_CAGEscan_Nextflow_testdata/1_S1_L001_R'
 
+if (params.verbose) {
+  printf("Glob is: ${params.glob}{1,2}*\n")
+}
+
 channel
   .fromFilePairs("${params.glob}{1,2}*")
   .map { row -> [ row[0], row[1][0], row[1][1] ] }
