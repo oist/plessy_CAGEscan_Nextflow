@@ -1,6 +1,9 @@
 #!/usr/bin/env nextflow
-
 nextflow.enable.dsl=2
+
+if (params.verbose) {
+  printf("Glob is: ${params.glob}{1,2}*\n")
+}
 
 channel
   .fromFilePairs("${params.glob}{1,2}*")
