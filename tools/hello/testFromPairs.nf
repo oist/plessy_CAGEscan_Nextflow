@@ -1,6 +1,7 @@
 #!/usr/bin/env nextflow
-
 nextflow.enable.dsl=2
+
+// Example: ./testFromPairs.nf --glob '../../../plessy_CAGEscan_Nextflow_testdata/1_S1_L001_R'
 
 channel
   .fromFilePairs("${params.glob}{1,2}*")
