@@ -6,6 +6,7 @@ process CAGEscanFindMolecules {
     container = 'cagescan-pipeline:2020072701'
     publishDir "${params.outdir}/CAGEscan/find-molecules",
         mode: "copy", overwrite: true
+    if (! params.count ) params.count = 2
     input:
         tuple val(sampleName),
               path(reads1),
@@ -18,7 +19,7 @@ process CAGEscanFindMolecules {
               emit: CAGEscanMolecules
     script:
     command = """
-        cagescan-find-molecules.sh -d 1 -g 0.5 -n 2 -p 20 ${reads1} > ${sampleName}.molecules.txt
+        cagescan-find-molecules.sh -d 1 -g 0.5 -n ${params.count} -p 20 ${reads1} > ${sampleName}.molecules.txt
         """
 
     if (params.verbose){
