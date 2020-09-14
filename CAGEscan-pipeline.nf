@@ -54,6 +54,7 @@ workflow {
                  , ch_dust_fasta)
     TagDust2_rRNA( TagDust2_dust.out.fastqPairs
                  , ch_rRNA_fasta)
-//  CAGEscan_pipeline(TagDust2_rRNA.out.fastqPairs, ch_index)
+    CAGEscan_pipeline(TagDust2_rRNA.out.fastqPairs
+                     , ch_index)
 //  view(CAGEscan_pipeline.out)
 }
