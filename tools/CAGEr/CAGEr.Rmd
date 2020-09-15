@@ -1,0 +1,51 @@
+---
+title: "CAGEr processing"
+output: 
+  html_document: 
+    keep_md: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r initialise}
+suppressPackageStartupMessages(library("CAGEr"))
+```
+
+```{r load_data}
+DF <- DataFrame(read.delim('multiplex.txt'))
+
+DF$sampleLabels   <- DF$samplename
+DF$inputFiles     <- paste0(DF$samplename, ".bed")
+DF$inputFilesType <- "bed"
+
+rownames(DF) <- DF$sampleLabels
+DF$samplename <- NULL
+```
+
+```{r construct_CAGEexp_object}
+ce <- CAGEexp(genomeName = NULL, colData = DF)
+getCTSS(ce, useMulticore = TRUE)
+```
+
+## Quality controls
+
+### Reverse cumulatives
+
+```{r plot_rev_cumul, dev=c("svg", "png")}
+plotReverseCumulatives(ce, fitInRange = c(5, 1000), onePlot = TRUE)
+```
+
+## Data export
+
+`CAGEexp` object saved under the name `CAGEexp.rds`
+
+```{r save_RDS}
+saveRDS(file = "CAGEexp.rds", ce)
+```
+
+## Session information
+
+```{r sessionInfo}
+sessionInfo()
+```
