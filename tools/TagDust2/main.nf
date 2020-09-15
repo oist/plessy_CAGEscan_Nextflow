@@ -117,7 +117,7 @@ process TagDust2_filter_ref {
 process TagDust2_filter_ref_SE {
 // Same as TagDust2 but with no demultiplexing
 // This is to count and remove rRNAs after demultiplexing
-    container = 'tagdust2:2020071401'
+    container = 'cagescan/tagdust2:2020071401'
 
     publishDir "${params.outdir}/tagdust2",
         mode: "copy", overwrite: true

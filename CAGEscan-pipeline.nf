@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 nextflow.enable.dsl=2
 
+// Example that worked: ./CAGEscan-pipeline.nf --multiplex ../plessy_CAGEscan_Nextflow_testdata/NC_SAKAI1.multiplex.txt --reads ../plessy_CAGEscan_Nextflow_testdata/*_L001_R --rRNA ../plessy_CAGEscan_Nextflow_testdata/ribo.fa --dust ../plessy_CAGEscan_Nextflow_testdata/dust.fa  --index /flash/LuscombeU/deletemeCharlesPlessy/deletemeIndexes/hg38+mm10.renamed -resume --verbose --count 1
+
 params.outdir = "pipeline_results"
 params.verbose = false
 
