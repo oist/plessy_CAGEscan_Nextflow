@@ -13,7 +13,8 @@ FIXME: the globbing is tricky: for instance `test/*_L001_R` would work and `test
 
  - A text table that we call "multiplex file", indicating which barcode
    and index were used for each libraries.
- - A genome indexed for the LAST aligner.
+ - A genome indexed for the LAST aligner.  The `--index` option must point to a
+   *directory* containing a LAST index called `index`. 
  - A reference rRNA file in FASTA format.
  - A file with primer sequences in FASTA formats to remove primer artefacts.
 
