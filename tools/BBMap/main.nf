@@ -66,6 +66,8 @@ process bbmap_minlen {
     input:
         tuple val(sampleName), path(reads1), path(reads2)
 
+    if (!params.minlength) { params.minlength = 28 }
+
     output:
         tuple val(sampleName),
         path("*minlenR1.fastq.gz"),
@@ -80,7 +82,7 @@ process bbmap_minlen {
             in2=$reads2 \
             out=${sampleName}_minlenR1.fastq.gz \
             out2=${sampleName}_minlenR2.fastq.gz \
-            minlen=28
+            minlen=${params.minlength}
          """
 
     if (params.verbose){
