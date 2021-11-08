@@ -43,3 +43,15 @@ the _multiplex file_.
 The `index` column originally contained the sequence of the Illumina index.
 Here, it must be a string that will uniquely identify one pair of FASTQ files
 produced by the sequencer.
+
+Example command:
+
+```
+nextflow run oist/plessy_CAGEscan_Nextflow \
+    -profile oist \
+    --multiplex NC_LIMMS7.multiplex.txt \
+    --reads '*S1_L001_R' \
+    --rRNA ribo.fa \
+    --dust dust.fa \
+     --index /bucket/LuscombeU/live/CharlesPlessy/LASTindexes/hg19
+```
