@@ -13,7 +13,8 @@ FIXME: the globbing is tricky: for instance `test/*_L001_R` would work and `test
 
  - A text table that we call "multiplex file", indicating which barcode
    and index were used for each libraries.
- - A genome indexed for the LAST aligner.
+ - A genome indexed for the LAST aligner.  The `--index` option must point to a
+   *directory* containing a LAST index called `index`. 
  - A reference rRNA file in FASTA format.
  - A file with primer sequences in FASTA formats to remove primer artefacts.
 
@@ -42,3 +43,15 @@ the _multiplex file_.
 The `index` column originally contained the sequence of the Illumina index.
 Here, it must be a string that will uniquely identify one pair of FASTQ files
 produced by the sequencer.
+
+Example command:
+
+```
+nextflow run oist/plessy_CAGEscan_Nextflow \
+    -profile oist \
+    --multiplex NC_LIMMS7.multiplex.txt \
+    --reads '*S1_L001_R' \
+    --rRNA ribo.fa \
+    --dust dust.fa \
+     --index /bucket/LuscombeU/live/CharlesPlessy/LASTindexes/hg19
+```

@@ -43,6 +43,40 @@ process TagDust2 {
     """
 }
 
+process TagDust2_cutAdapt {
+    container = 'cagescan/tagdust2:2020071401'
+
+    publishDir "${params.outdir}/tagdust2",
+        mode: "copy", overwrite: true
+
+    input:
+        tuple val(sampleName), path(reads1), path(reads2)
+        val(tagdust_arch)
+
+    output:
+        path "*_cut_*READ1.fq", emit: fastqR1
+        path "*_cut_*READ2.fq", emit: fastqR2
+        path "*_logfile.txt", emit: logFile
+
+    script:
+
+    command = """
+        tagdust                      \
+            -arch $tagdust_arch      \
+            -o ${sampleName}_cut_    \
+            ${reads1}                \
+            ${reads2}                \
+         """
+
+    if (params.verbose){
+        println ("[MODULE] TagDust2_cutAdapt command: " + command)
+    }
+
+    """
+    ${command}
+    """
+}
+
 process TagDust2_demultiplex {
     container = 'cagescan/tagdust2:2020071401'
 
@@ -82,7 +116,9 @@ process TagDust2_demultiplex {
 process TagDust2_filter_ref {
     container = 'cagescan/tagdust2:2020071401'
 
-    publishDir "${params.outdir}/tagdust2",
+    if (!params.outsubdir) { params.outsubdir = "tagdust2" }
+
+    publishDir "${params.outdir}/${params.outsubdir}",
         mode: "copy", overwrite: true
 
     input:

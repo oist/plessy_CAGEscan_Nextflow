@@ -6,21 +6,20 @@ params.outdir = "nf_results"
 params.verbose = false
 
 if (!params.input) { exit 1, 'Input samplesheet not specified!' }
-if (!params.rRNAref)  { exit 1, 'rRNA sequence file not specified!' }
-if (!params.outsubdir) { params.outsubdir = "tagdust2" }
+if (!params.arch)  { exit 1, 'Architecture file not specified!' }
 
-include { removeRiboRNA as main_wf } from './workflow.nf'
+include { TagDust2_demultiplex } from './main.nf'
 
 channel
   .fromPath(params.input)
   .splitCsv(sep: "\t", header: true)
   .map { row -> [ row.name, file(row.R1, checkIfExists: true), file(row.R2, checkIfExists: true) ] }
-  .set {ch_fastqPair}
+  .set {input}
 
 channel
-  .value(file(params.rRNAref, checkIfExists: true))
-  .set {ch_refFile}
+  .value(file(params.arch, checkIfExists: true))
+  .set {arch}
 
 workflow {
-    main_wf(ch_fastqPair, ch_refFile)
+  TagDust2_demultiplex(input, arch)
 }
